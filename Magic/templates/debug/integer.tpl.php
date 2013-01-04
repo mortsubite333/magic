@@ -1,0 +1,1 @@
+<span class="integer value"><?=$val?></span>

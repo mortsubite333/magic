@@ -1,0 +1,92 @@
+/*
+ * Begin debug styling
+*/
+#debug_window {
+    position:fixed;
+    width:290px;
+    z-index:50;
+    background-color:#272822;
+    color:#ccc;
+    max-height:600px;
+    font-family:monospace;
+}
+#debug_window .handle {
+	width:100%;
+	height:20px;
+	background-color:#3d3e37;
+	cursor:move;
+}
+#variables {
+	overflow-y:scroll;
+    padding-bottom:5px;
+    max-height:580px;
+}
+#variables > div {
+    display:table;
+    width:100%;
+}
+#variables > div > span {
+    width:100%;
+    display:block;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box; /* Firefox */
+    padding:0 5px;
+}
+#variables .name {
+	font-weight:bold;
+	border-bottom:1px dashed #777;
+	color:#fd951e;
+}
+#variables > div > .value {
+    padding-left:20px;
+	border-bottom:3px double #777;
+}
+#variables .value:before, #variables .value:after {
+    color:#99cc00;
+}
+.string.value {
+	color:#e6db74;
+}
+.string.value:before, .string.value:after {
+    content:'"';
+}
+.integer.value:before {
+    content:'int(';
+}
+.double.value:before {
+    content:'float(';
+}
+.boolean.value:before {
+    content:'bool(';
+}
+.array.value:before {
+    content:'Array(';
+}
+.array.value .key:before {
+	content:'['
+}
+.array.value .key:after {
+	content:']'
+}
+.array .variable {
+	display:block;
+	padding-left:15px;
+}
+.array.value {
+	word-wrap:break-word;
+}
+.object.value .methods {
+	color:#66dbef;
+}
+.object.value span {
+	display:block;
+}
+.object .variables span.key, .object .variables span.value {
+	display:inline;
+}
+.null.value, .integer.value, .double.value {
+	color:#f8264c;
+}
+.integer.value:after, .double.value:after, .boolean.value:after, .array.value:after {
+    content:')';
+}
