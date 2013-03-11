@@ -1,10 +1,12 @@
 <?php
-//require "settings.php";
-//require "Switchboard/config.php";
+require "Magic/classes/OBController.php";
+$ob = new OBController;
+echo $ob->getLevel();
+$ob->startNew();
+echo "\n" . $ob->getLevel();
+die;
 require "Magic/config.php";
-//$regex = '/^posts\/.*/i';
-//echo SwitchBoard::getMain();
-//echo preg_match($regex, 'posts/this-blog-post');
+
 Magic::addVar('teststr', 'This is a value');
 Magic::addVar('testint', 5);
 Magic::addVar('testdouble', 5.1235);

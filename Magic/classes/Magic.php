@@ -14,6 +14,7 @@ class Magic {
     private static $root_folder = '';
     private static $ob_start_level = null;
     private static $capturing = false;
+    private static $return_next = false;
 
     public static function setTemplatesFolder($path) {
         self::$templates_folder = $path;
@@ -73,11 +74,12 @@ class Magic {
     protected static function handleBuffer($output) {
         $ob = ob_get_status();
 
-        if ($ob['name'] == __CLASS__ . '::' . __FUNCTION__ && $ob['level'] > self::$ob_start_level) {
+        if ($ob['name'] == __CLASS__ . '::' . __FUNCTION__ && $ob['level'] > self::$ob_start_level && !self::$return_next) {
             self::$capturing = true;
         } else {
             self::$capturing = false;
-        }
+		self::$return_next = false;
+	}
         return $output;
     }
 
@@ -94,7 +96,7 @@ class Magic {
             //self::$template_blocks[$template][] = $temp; //just eating memory for now
             echo $temp;
         } else {
-            self::$page = $temp;
+            return $temp;
         }
     }
 
@@ -128,7 +130,7 @@ class Magic {
             if (self::$templating_on) {
                 echo "\n<!-- End " . $template . self::TEMPLATE_EXT . " $tpl_num-->\n";
             }
-            self::endCapture($template);
+            return self::endCapture($template);
         } else {
             throw new Exception('Template file not found.');
         }
@@ -150,13 +152,14 @@ class Magic {
         if (self::$ob_start_level == null) {
             self::$ob_start_level = ob_get_level();
         }
+	ksort(self::$template_vars);
         self::addTpl($path);
         self::output();
     }
 
     public static function returnSummon($path) {
-        self::addTpl($path);
-        return self::$page;
+    	self::$return_next = true;
+        return self::addTpl($path);
     }
 
     public static function enableTemplating() {
