@@ -1,8 +1,15 @@
 <?php
 
 class Magic {
-
-    const TEMPLATE_EXT = '.tpl.php';
+    
+    public function __construct() {
+        echo "here";
+        return 5;
+    }
+    
+    public static function init() {
+        
+    }
 
     private static $page = '';
     private static $template_blocks = array();
