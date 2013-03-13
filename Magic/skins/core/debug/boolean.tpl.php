@@ -1,0 +1,1 @@
+<span class="boolean value"><?=$val ? 'true' : 'false';?></span>
