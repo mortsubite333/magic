@@ -40,18 +40,21 @@ class Template
         if (substr_count($rel_path, self::TEMPLATE_EXT) > 1) {
             throw new Exception("Tried to add an invalid template: $rel_path");
         }
+        
         $this->correctDirectorySeparator($rel_path);
+        
         if (strpos($rel_path, self::TEMPLATE_EXT) === strlen($rel_path) - strlen(self::TEMPLATE_EXT)) {
             $rel_path = str_replace(self::TEMPLATE_EXT, '', $rel_path);
-        } elseif (substr($rel_path, -1) === '/') { //Later think about ways to use DIRECTORY_SEPARATOR
+        } elseif (substr($rel_path, -1) === DIRECTORY_SEPARATOR) {
             $rel_path = substr($rel_path, 0, strlen($rel_path)-1);
         }
+        
         $this->name = basename($rel_path);
         $rel_path = str_replace($this->name, '', $rel_path);
         $this->rel_path = $rel_path . $this->name . self::TEMPLATE_EXT;
     }
     
-    public function existsIn(TemplateFolder $folder)
+    public function existsIn(Skin $folder)
     {
         $full_path = $folder->getAbsolutePath() . $this->rel_path;
         if (!file_exists($full_path)) {

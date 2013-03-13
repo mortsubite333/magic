@@ -1,1 +1,0 @@
-<span class="double value"><?=$val?></span>

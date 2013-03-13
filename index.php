@@ -2,12 +2,14 @@
 require "Magic/classes/OBController.php";
 require "Magic/classes/Magic.php";
 require "Magic/classes/Template.php";
-require "Magic/classes/TemplateFolder.php";
+require "Magic/classes/Skin.php";
 define('WEB_ROOT', getcwd());
 require './Magic/config.php';
-$main_templates = new TemplateFolder(MAGIC_ROOT.'templates');
+/*$main_templates = new TemplateFolder(MAGIC_ROOT.'templates');
 $head = $main_templates->getTemplate('html/select_menu');
-print_r($head);
+print_r($head);*/
+$m = Magic::init();
+var_dump($m);
 die;
 
 Magic::addVar('teststr', 'This is a value');

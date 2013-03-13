@@ -3,7 +3,7 @@
 class OBController 
 {
     public function __construct() {
-        return $this->getLevel();
+        $this->getStatus();
     }
     public function getStatus()
     {

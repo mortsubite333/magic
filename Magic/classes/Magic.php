@@ -1,17 +1,43 @@
 <?php
 
 class Magic {
+
+    private static $instance = null;
+    private $ob = null; //Holds the OBController
+    private $main_skin = null; //Holds the standart Skin - how to load this automatically... Config files!
+    private $second_skin = null; //Holds the custom Skin, which will overwrite any template files contained in $main_skin
     
-    public function __construct() {
-        echo "here";
-        return 5;
+    public static function &init()
+    { //Should probably set up some sort of config, or at least read from it
+        if (self::$instance === null) {
+            self::$instance = new Magic();
+        }
+        return self::$instance;
     }
     
-    public static function init() {
-        
+    private function __construct()
+    {
+        $this->ob = new OBController();
+    }
+    
+    public static function __callStatic($name, $args)
+    {
+        if(method_exists(self::$instance, $name)) {
+            self::$instance->$name($args);
+        }
+    }
+    
+    private function template($rel_path)
+    {
+    
+    }
+    
+    public function loadSkin(Skin $skin) // This should load the skin XML definition file, and create the Skin object from there
+    {
+    
     }
 
-    private static $page = '';
+    /*private static $page = '';
     private static $template_blocks = array();
     private static $template_vars = array();
     private static $secondary_template_vars = array();
@@ -91,9 +117,7 @@ class Magic {
     }
 
     protected static function startCapture($template) {
-        /* if (empty(self::$template_blocks[$template])) {
-          self::$template_blocks[$template] = array();
-          } */
+
         ob_start(array(__CLASS__, 'handleBuffer'));
     }
 
@@ -239,8 +263,6 @@ class Magic {
         } else {
             throw new Exception('Only one radio button can be checked, multiple passed in via $checked.');
         }
-    }
+    }*/
 
 }
-
-?>
