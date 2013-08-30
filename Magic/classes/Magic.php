@@ -80,7 +80,6 @@ class Magic {
             self::$capturing = true;
         } else {
             self::$capturing = false;
-		self::$return_next = false;
 	}
         return $output;
     }
@@ -154,7 +153,7 @@ class Magic {
         if (self::$ob_start_level == null) {
             self::$ob_start_level = ob_get_level()-1;
         }
-	ksort(self::$template_vars);
+		ksort(self::$template_vars);
         self::addTpl($path);
         self::output();
     }
@@ -162,6 +161,7 @@ class Magic {
     public static function returnSummon($path) {
     	self::$return_next = true;
         return self::addTpl($path);
+        self::$return_next = false;
     }
 
     public static function enableTemplating() {
