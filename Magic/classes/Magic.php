@@ -76,7 +76,7 @@ class Magic {
     protected static function handleBuffer($output) {
         $ob = ob_get_status();
 
-        if ($ob['name'] == __CLASS__ . '::' . __FUNCTION__ && $ob['level'] > self::$ob_start_level && !self::$return_next) {
+        if ($ob['level'] > self::$ob_start_level) {
             self::$capturing = true;
         } else {
             self::$capturing = false;
@@ -93,7 +93,8 @@ class Magic {
 
     protected static function endCapture($template) {
         $temp = ob_get_clean();
-        if (self::$capturing) {
+		$ob = ob_get_status();
+        if (self::$capturing && (!self::$return_next || $ob['level'] > self::$ob_start_level)) {
             //self::$template_blocks[$template][] = $temp; //just eating memory for now
             echo $temp;
         } else {
@@ -159,9 +160,9 @@ class Magic {
     }
 
     public static function returnSummon($path) {
+        self::$ob_start_level = ob_get_level();
     	self::$return_next = true;
         return self::addTpl($path);
-        self::$return_next = false;
     }
 
     public static function enableTemplating() {
