@@ -44,9 +44,12 @@ class Magic {
         $lng_folder = self::$root_folder . 'lng';
         $folder = new DirectoryIterator($lng_folder);
         foreach ($folder as $file) {
-            if (!$file->isDot() && !$file->isDir() && $file->getExtension() == 'lng') {
-                $lng_array = parse_ini_file($file->getPathname());
-                $lng[$file->getBasename('.lng')] = $lng_array;
+            if($file->isFile()) {
+                $file_extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
+                if (!$file->isDot() && !$file->isDir() && $file_extension == 'lng') {
+                    $lng_array = parse_ini_file($file->getPathname());
+                    $lng[$file->getBasename('.lng')] = $lng_array;
+                }
             }
         }
     }
@@ -80,7 +83,7 @@ class Magic {
             self::$capturing = true;
         } else {
             self::$capturing = false;
-	}
+        }
         return $output;
     }
 
