@@ -18,15 +18,17 @@ class Magic {
 
     public static function setTemplatesFolder($path) {
         self::$templates_folder = $path;
-        if (substr($path, -1) != '/') {
-            self::$templates_folder .= '/';
+        $ds = DIRECTORY_SEPARATOR;
+        if (substr($path, -1) != $ds) {
+            self::$templates_folder .= $ds;
         }
     }
 
     public static function setRootFolder($path) {
         self::$root_folder = $path;
-        if (substr($path, -1) != '/') {
-            self::$root_folder .= '/';
+        $ds = DIRECTORY_SEPARATOR;
+        if (substr($path, -1) != $ds) {
+            self::$root_folder .= $ds;
         }
     }
 
@@ -42,9 +44,12 @@ class Magic {
         $lng_folder = self::$root_folder . 'lng';
         $folder = new DirectoryIterator($lng_folder);
         foreach ($folder as $file) {
-            if (!$file->isDot() && !$file->isDir() && $file->getExtension() == 'lng') {
-                $lng_array = parse_ini_file($file->getPathname());
-                $lng[$file->getBasename('.lng')] = $lng_array;
+            if($file->isFile()) {
+                $file_extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
+                if (!$file->isDot() && !$file->isDir() && $file_extension == 'lng') {
+                    $lng_array = parse_ini_file($file->getPathname());
+                    $lng[$file->getBasename('.lng')] = $lng_array;
+                }
             }
         }
     }
@@ -74,7 +79,7 @@ class Magic {
     protected static function handleBuffer($output) {
         $ob = ob_get_status();
 
-        if ($ob['name'] == __CLASS__ . '::' . __FUNCTION__ && $ob['level'] > self::$ob_start_level && !self::$return_next) {
+        if ($ob['level'] > self::$ob_start_level) {
             self::$capturing = true;
         } else {
             self::$capturing = false;
@@ -92,7 +97,8 @@ class Magic {
 
     protected static function endCapture($template) {
         $temp = ob_get_clean();
-        if (self::$capturing) {
+		$ob = ob_get_status();
+        if (self::$capturing && (!self::$return_next || $ob['level'] > self::$ob_start_level)) {
             //self::$template_blocks[$template][] = $temp; //just eating memory for now
             echo $temp;
         } else {
@@ -150,15 +156,17 @@ class Magic {
 
     public static function summon($path) {
         if (self::$ob_start_level == null) {
-            self::$ob_start_level = ob_get_level();
+            self::$ob_start_level = ob_get_level()-1;
         }
-	ksort(self::$template_vars);
+
+		    ksort(self::$template_vars);
         self::addTpl($path);
         self::output();
     }
 
     public static function returnSummon($path) {
-    	self::$return_next = true;
+        self::$ob_start_level = ob_get_level();
+      	self::$return_next = true;
         return self::addTpl($path);
     }
 
